@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  gradio-app
+
+Globals:
+  Function:
+    Timeout: 120
+
+Resources:
+  GradioFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 1024
+      Policies: arn:aws:iam::aws:policy/AmazonBedrockFullAccess
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: RESPONSE_STREAM
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./function
+      DockerTag: python3.12-v1
+
+Outputs:
+  GradioFunction:
+    Description: "Gradio function ARN"
+    Value: !GetAtt GradioFunction.Arn
+  GradioFunctionUrl:
+    Description: "Function URL for Gradio function"
+    Value: !GetAtt GradioFunctionUrl.FunctionUrl
